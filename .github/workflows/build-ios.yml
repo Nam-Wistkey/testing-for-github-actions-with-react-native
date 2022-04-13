@@ -24,19 +24,19 @@ jobs:
         run: yarn install
       - name: Building bundle
         run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle --assets-dest ios
-      - name: Install pods
-        run: cd ios; pod install
+      # - name: Install pods
+      #   run: cd ios; pod install
       - name: Check iOS project directory before build
         run: ls -l ios
       - name: Build iOS Action
         uses: sparkfabrik/ios-build-action@v1.2.0
         with:
-          project-path: ios/moneyHero.xcodeproj
+          project-path: ios/project.xcodeproj
           p12-base64: ${{ secrets.P12_BASE64 }} # Required if single file: Base64 encoded p12 file (key + cert).
           mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }} # Required Base64 encoded mobileprovision file.
           code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }} # Required For example, "iPhone Distribution", "Apple Development"
           team-id: ${{ secrets.TEAM_ID }} # Required Team id.
-          workspace-path: ios/moneyHero.xcworkspace # optional
+          workspace-path: ios/project.xcworkspace # optional
       #          build-pods: true
       #          pods-path: project/ios/Podfile
       - name: Upload Artifact
