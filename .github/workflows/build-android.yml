@@ -1,21 +1,45 @@
-name: react-native-android-build-apk
+name: Build Android
+
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+#  pull_request:
+#    branches: [master]
+
 jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Install React Native CLI
+        run: yarn global add react-native-cli
       - name: Install npm dependencies
         run: |
-          cd project;yarn install
+          yarn install
+      - name: Build Android Bundle
+        run: react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle
+        # NAM: ugly react native cli before building an APK (not aab). Should be bundle by the build cmd instead of externally called the cli.
       - name: Build Android Release
         run: |
-          cd project/android && ./gradlew assembleRelease
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v1
+          cd ./android && ./gradlew assembleRelease
+      - name: Sign app APK
+        uses:
+          r0adkll/sign-android-release@v1
+          # ID used to access action output
+        id: sign_app
         with:
-          name: app-release.apk
-          path: project/android/app/build/outputs/apk/release/
+          releaseDirectory: ./android/app/build/outputs/apk/release
+          signingKeyBase64: ${{ secrets.KEY_STORE_SIGNING_KEY }}
+          alias: ${{ secrets.KEY_STORE_ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        #          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          # override default build-tools version (29.0.3) -- optional
+          BUILD_TOOLS_VERSION: '30.0.2'
+      - name: Upload signed app
+        uses: actions/upload-artifact@v2
+        with:
+          name: Signed app bundle
+          path:
+            ${{steps.sign_app.outputs.signedReleaseFile}}
+            # path: ./android/app/build/outputs/apk/release/app-release.apk
