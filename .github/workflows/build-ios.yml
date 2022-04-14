@@ -33,8 +33,10 @@ jobs:
           p12-base64: ${{ secrets.P12_BASE64 }} # Required if single file: Base64 encoded p12 file (key + cert).
           # mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }} # Required Base64 encoded mobileprovision file.
           mobileprovision-base64: ${{ secrets.ADHOC_PROVISION_PROFILE }} # Required Base64 encoded mobileprovision file.
-          code-signing-identity: 'iPhone Distribution' # Required For example, "iPhone Distribution", "Apple Development"
+          code-signing-identity: "iPhone Distribution" # Required For example, "iPhone Distribution", "Apple Development"
           team-id: ${{ secrets.TEAM_ID }} # Required Team id.
+          export-method: "ad-hoc"
+          # Choose app-store, "ad-hoc", "package" "enterprise", "development", or "developer-id". Default "app-store".
           workspace-path: ios/project.xcworkspace # optional
       #          build-pods: true
       #          pods-path: project/ios/Podfile
