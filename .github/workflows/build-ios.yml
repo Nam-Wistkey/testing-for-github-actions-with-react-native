@@ -22,12 +22,10 @@ jobs:
         run: yarn global add react-native-cli
       - name: Install yarn dependecies
         run: yarn install
-      - name: Building bundle
-        run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle --assets-dest ios
+      # - name: Building bundle
+      #   run: yarn react-native bundle --platform ios --dev false --entry-file index.js --bundle-output ios/main.jsbundle --assets-dest ios
       # - name: Install pods
       #   run: cd ios; pod install
-      - name: Check iOS project directory before build
-        run: ls -l ios
       - name: Build iOS Action
         uses: sparkfabrik/ios-build-action@v1.2.0
         with:
